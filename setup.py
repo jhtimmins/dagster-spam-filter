@@ -11,7 +11,7 @@ setup(
         "Flask~=2.3",
         "pandas~=2.0",
         "numpy~=1.25",
-        "scikit-learn~=1.3"
+        "scikit-learn~=1.3",
     ],
     extras_require={"dev": ["dagster-webserver", "pytest"]},
 )

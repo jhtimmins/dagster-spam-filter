@@ -5,7 +5,7 @@ from typing import Dict
 
 import numpy as np
 import pandas as pd
-from dagster import AssetOut, asset, job, multi_asset, op
+from dagster import AssetOut, asset, multi_asset
 from sklearn.model_selection import train_test_split
 
 from . import spam
@@ -75,15 +75,13 @@ def spam_model(spam_dataset: pd.DataFrame):
     return spam_bag_of_words, non_spam_bag_of_words, train_data, test_data
 
 
-@op
-def score_and_save_model(
+@asset
+def model_score(
     spam_bag_of_words: Dict,
     non_spam_bag_of_words: Dict,
     spam_training_dataframe: pd.DataFrame,
     spam_testing_dataframe: pd.DataFrame,
-    database: Database,
-    model_storage: ModelStorage,
-) -> None:
+) -> Dict:
     def get_prediction_rate(predictions: pd.Series, true_values: pd.Series) -> float:
         return np.sum(predictions & true_values) / np.sum(true_values)
 
@@ -101,11 +99,26 @@ def score_and_save_model(
     true_positives = get_prediction_rate(predictions, spam_testing_dataframe.spam)
     false_positives = get_prediction_rate(predictions, ~spam_testing_dataframe.spam)
 
+    return {
+        "true_positives": true_positives,
+        "false_positives": false_positives,
+        "percent_spam": percent_spam,
+    }
+
+
+@asset
+def model_file(
+    model_score: Dict,
+    spam_bag_of_words: Dict,
+    non_spam_bag_of_words: Dict,
+    database: Database,
+    model_storage: ModelStorage,
+):
     df = database.query("SELECT * FROM models WHERE status = 'active'")
     if (
         df.empty
-        or (df.iloc[0].true_positive_rate <= true_positives)
-        and (df.iloc[0].false_positive_rate >= false_positives)
+        or (df.iloc[0].true_positive_rate <= model_score["true_positives"])
+        and (df.iloc[0].false_positive_rate >= model_score["false_positives"])
     ):
         filename = f"{int(time.time())}.json"
         model_storage.write(
@@ -113,7 +126,7 @@ def score_and_save_model(
             {
                 "spam_bow": spam_bag_of_words,
                 "non_spam_bow": non_spam_bag_of_words,
-                "percent_spam": percent_spam,
+                "percent_spam": model_score["percent_spam"],
             },
         )
         with database as conn:
@@ -123,11 +136,6 @@ def score_and_save_model(
             conn.execute(
                 f"""
                 INSERT INTO models (path, status, true_positive_rate, false_positive_rate) 
-                VALUES ('{filename}', 'active', {true_positives}, {false_positives})
+                VALUES ('{filename}', 'active', {model_score["true_positives"]}, {model_score["false_positives"]})
                 """
             )
-
-
-@job
-def create_spam_model_job():
-    score_and_save_model(*spam_model.to_source_assets())
