@@ -6,11 +6,9 @@ from dagster import (
     load_assets_from_modules,
 )
 
-from . import assets, database
+from . import assets
 
 from .resources import Database, ModelStorage
-
-database.create_database()
 
 all_assets = load_assets_from_modules([assets])
 
