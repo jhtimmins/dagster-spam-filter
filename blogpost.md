@@ -219,11 +219,6 @@ def spam_model(sms_spam_examples: pd.DataFrame):
     )
 
     return spam_bag_of_words, non_spam_bag_of_words, train_data, test_data
-
-            train_non_spam_words
-        )
-
-    return spam_bag_of_words, non_spam_bag_of_words, spam_training_dataframe, spam_testing_dataframe
 ```
 
 
@@ -296,6 +291,8 @@ Create the file “database.py” inside the spam_filter directory. This will cr
 
 
 ```python
+# database.py
+
 import duckdb
 
 
@@ -326,9 +323,7 @@ def create_database():
     print(tables)
 ```
 
-
-Now update \_\_init\_\_.py to run create_database() whenever you cann “dagster dev”.
-
+Now update \_\_init\_\_.py to run create_database() whenever you run “dagster dev” from the command line.
 
 ```python
 # __init__.py
@@ -338,7 +333,6 @@ from . import database
 
 database.create_database()
 ```
-
 
 It’s necessary to create a Dagster resource so that the database is also accessible within our workflow. The following resource looks confusing, but it serves two (hopefully) straightforward purposes.
 
@@ -390,9 +384,7 @@ class Database(ConfigurableResource):
                 return result.to_df()
 ```
 
-
 Make this new resource accessible to Dagster by adding it to the Definition object.
-
 
 ```python
 # __init__.py
@@ -744,4 +736,3 @@ We didn’t dig into testing or logging in this tutorial, but these are essentia
 # Wrapping up
 
 Improving data quality is an ongoing battle in any data team.  Spam erodes data quality and data trust. When we ingest user-provided data, should always consider the challenge of abuse and spam.  Hopefully our tutorial will help pave the way for better data quality in your organization, as this approach can be applied to many more use cases than just messaging.
-
