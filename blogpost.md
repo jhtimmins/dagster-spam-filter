@@ -109,8 +109,15 @@ You can download the spam dataset from Kaggle or [this project’s GitHub](https
         spam
       </td>
       <td className="p-4" style={{borderLeft: '1px solid #ccc'}}>
-        Free entry in 2 a wkly comp to win FA Cup final tkts 21st May 2005. Text FA to 87121 to receive entry question(std txt rate)T&C's apply 08452810075over18's,,,
-ham,U dun say so early hor... U c already then say...
+        Free entry in 2 a wkly comp to win FA Cup final tkts 21st May 2005. Text FA to 87121 to receive entry question(std txt rate)T&C's apply 08452810075over18's
+      </td>
+    </tr>
+    <tr style={{border: '1px solid #ccc'}}>
+      <td className="p-1 sm:p-2 md:p-4">
+        ham
+      </td>
+      <td className="p-4" style={{borderLeft: '1px solid #ccc'}}>
+        U dun say so early hor... U c already then say...
       </td>
     </tr>
   </table>
@@ -737,3 +744,4 @@ We didn’t dig into testing or logging in this tutorial, but these are essentia
 # Wrapping up
 
 Improving data quality is an ongoing battle in any data team.  Spam erodes data quality and data trust. When we ingest user-provided data, should always consider the challenge of abuse and spam.  Hopefully our tutorial will help pave the way for better data quality in your organization, as this approach can be applied to many more use cases than just messaging.
+
