@@ -1,16 +1,3 @@
----
-layout: 'BlogPost'
-status: 'published'
-title: 'A Dagster-Powered Spam Filter'
-excerpt: 'Maintaining data trust means keeping out the SPAM. Using Dagster, you can protect the integrity of any user-generated service.'
-coverImage: '/posts/dagster-spam-filter/dagster-spam-filter-cover-min.jpg'
-date: '2023-09-14'
-authors: ['jamestimmins']
-featured: false
-show_excerpt: true
----
-
-
 Every product that allows users to send messages to each other quickly realizes that spam is a real problem, even at modest scale. When sites allow malicious users to send spam, user trust quickly erodes and they start to leave for competitors.
 
 Effective spam filtering, that hides spam messages while letting legitimate messages through, is an essential part of email or messaging systems.
@@ -750,11 +737,3 @@ We didn’t dig into testing or logging in this tutorial, but these are essentia
 # Wrapping up
 
 Improving data quality is an ongoing battle in any data team.  Spam erodes data quality and data trust. When we ingest user-provided data, should always consider the challenge of abuse and spam.  Hopefully our tutorial will help pave the way for better data quality in your organization, as this approach can be applied to many more use cases than just messaging.
-
----
-
-import BlogEndingDaggy from 'components/BlogEndingDaggy.mdx'
-import BlogEndingSection from 'components/BlogEndingSection.mdx'
-
-<BlogEndingDaggy />
-<BlogEndingSection />
